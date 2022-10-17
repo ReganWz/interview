@@ -1,0 +1,143 @@
+单例、工厂、策略、模板
+
+单例：
+//懒汉
+//如果当变量在初始化的时候，并发同时进入声明语句，并发线程将会阻塞等待初始化结束
+class Singleton
+{
+public:
+     ~Singleton() {}
+     Singleton(Singleton&) = delete;
+     Singleton& operator=(Singleton&) = delete;
+     static Singleton& get_instance()
+     {
+         static Singleton instance;
+         return instance;
+     }
+private:
+     Singleton(){}
+};
+
+
+//饿汉
+class Singleton
+{
+public:
+     ~Singleton() {}
+     static Singleton* get_instance();
+private:
+     Singleton() {}
+     static Singleton* instance;
+};
+
+Singleton* Singleton::instance = new Singleton();
+Singleton* Singleton::get_instance()
+{
+     return instance;
+}
+
+工厂模式：
+class shoes
+{
+public:
+     virtual void show() = 0;
+     virtual ~shoes(){}
+};
+
+class Adds :public shoes
+{
+public:
+     Adds() {}
+     ~Adds(){}
+public:
+     void show() 
+     {
+         cout <<"show" << endl;
+     }
+};
+
+class Factory
+{
+public:
+     virtual shoes* create() = 0;
+};
+
+class AddsFactory :public Factory
+{
+public:
+     shoes* create()
+     {
+         return new Adds();
+     }
+};
+
+策略
+class Strategy
+{
+public:
+     virtual ~Strategy(){}
+     virtual void exec() = 0;
+};
+
+class StrategyA :public Strategy
+{
+public:
+     void exec()
+     {
+         cout<<"StrategyA exec"<< endl;
+     }
+};
+
+
+class StrategyB :public Strategy
+{
+public:
+     void exec()
+     {
+         cout << "StrategyB exec" << endl;
+     }
+};
+
+class Context
+{
+public:
+     Context(Strategy* strategy):_strategy(strategy){}
+     void Set_Strategy(Strategy* strategy)
+     {
+         _strategy = strategy;
+     }
+     void Exec()
+     {
+         _strategy->exec();
+     }
+private:
+     Strategy* _strategy = NULL;
+};
+
+模板:
+class Template
+{
+public:
+     virtual ~Template(){}
+     virtual void TemplateMethod()
+     {
+         something1();
+         something2();
+     }
+
+     virtual void something1() = 0;
+     virtual void something2() = 0;
+};
+
+class ConcreteClassA
+{
+public:
+     void something1()
+     {
+         cout<<"something1" << endl;
+     }
+     void something2()
+     {
+         cout << "something2" << endl;
+     }
+};
